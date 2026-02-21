@@ -361,3 +361,28 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Core LaTeX/PDFLaTeX auxiliary files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+
+# Bibliography auxiliary files
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*.run.xml
+
+# Build tool files (latexmk, synctex, etc.)
+*.fdb_latexmk
+*.synctex.gz
+*.pdfsync
+
+# Intermediate documents
+*.dvi
+*.xdv

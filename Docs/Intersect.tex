@@ -1,0 +1,285 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+\usepackage[english,russian]{babel}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+\geometry{margin=0.5in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\usepackage{titlesec}
+
+% Настройка формата заголовка секции: жирный, обычный размер
+\titleformat{\section}
+  {\normalfont\Large\bfseries} % Шрифт: размер, жирный
+  {\thesection}                % Нумерация
+  {1em}                       % Расстояние
+  {}           
+
+\title{\textbf{Пересечение двух отрезков в пространстве}}
+\author{Бирюков Вячеслав Геннадиевич}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+\section{Постановка задачи}
+
+Есть класс трёхмерного вектора:
+\begin{verbatim}
+class Vector3D
+{
+double X;
+double Y;
+double Z;
+...
+
+}
+\end{verbatim}
+и трёхмерного отрезка, заданного двумя Vector3D:
+
+\begin{verbatim}
+class Segment3D
+{
+Vector3D start;
+Vector3D end;
+...
+
+}
+\end{verbatim}
+Требуется написать функцию Intersect, которая будет находить точку Vector3D пересечения двух
+заданных на вход Segment3D. В классы Vector3D и Segment3D можно добавлять любые методы.
+
+
+\section{Метод решения задачи}
+
+Для решения поставенной в \textbf{п.1} задачи воспользуемся параметрическим уравнением отрезка прямой, соединяющего точки (концы векторов) $\mathbf{v}_{1}(x_{1}, y_{1}, z_{1})$ и $\mathbf{v}_{2}(x_{2}, y_{2}, z_{2})$:
+\begin{equation}
+	\mathbf{p}\left(t\right) = \mathbf{v}_{1} + t\left(\mathbf{v}_{2} - \mathbf{v}_{1}\right), \label{eq:1}
+\end{equation}
+где $t \in \left[0; 1\right]$.
+
+Пусть параметрически с помощью формулы (\ref{eq:1}) заданы два отрезка:
+\begin{eqnarray}
+	\mathbf{p}\left(t\right) = \mathbf{v}_{1} + t\left(\mathbf{v}_{2} - \mathbf{v}_{1}\right), \label{eq:2} \\
+	\mathbf{q}\left(t\right) = \mathbf{u}_{1} + t\left(\mathbf{u}_{2} - \mathbf{u}_{1}\right) \label{eq:3}. 
+\end{eqnarray}
+Для того чтобы эти отрезки пересекались, т.е. имели общую точку нужно потребовать для некоторых значений $t_{1}$ и $t_{2}$ выполнение следующего равенства:
+\begin{equation}
+	\mathbf{p}\left(t_{1}\right) = \mathbf{q}\left(t_{2}\right). \label{eq:4}
+\end{equation}
+С учетом соотношений (\ref{eq:2}) и (\ref{eq:3}) равенство (\ref{eq:4}) запишется в виде
+\begin{equation}
+	 \mathbf{v}_{1} + t\left(\mathbf{v}_{2} - \mathbf{v}_{1}\right) = 
+	 \mathbf{u}_{1} + t\left(\mathbf{u}_{2} - \mathbf{u}_{1}\right). \label{eq:5}
+\end{equation} 
+Введем обозначения:
+\begin{eqnarray} 
+	\Delta \mathbf{v} = \mathbf{v_{2}} - \mathbf{v_{1}}, \label{eq:6}\\
+	\Delta \mathbf{u} = \mathbf{u_{2}} - \mathbf{u_{1}}, \label{eq:7} \\
+        \mathbf{w} = \mathbf{u_{1}} - \mathbf{v_{1}}. \label{eq:8}
+\end{eqnarray}
+Тогда уравнение (\ref{eq:5}) можно представить в виде:
+\begin{equation}
+	Ax=B, \label{eq:9}
+\end{equation}
+где
+$$
+	A = 
+	\begin{pmatrix}
+		\Delta v_{x} & -\Delta u_{x} \\
+		\Delta v_{y} & -\Delta u_{y} \\
+		\Delta v_{z} & -\Delta u_{z} \\				
+	\end{pmatrix},
+	x = 
+	\begin{pmatrix}
+	t_{1} \\ t_{2}
+	\end{pmatrix},
+	A = 
+	\begin{pmatrix}
+		w_{x}  \\
+		w_{y}  \\
+		w_{z}  \\				
+	\end{pmatrix}.		
+$$
+
+Система линейных алгебраических уравнений (\ref{eq:9}) является переопределенной, т.е. количество уравнений больше чем количество неизветстных. К такого рода системам, в частности, приводит применение метода наименьших квадратов. Для решения таких систем разработаны специальные методы, напрмер: non-negative least squares (NNLS), псевдообратные 
+матрицы Мура-Пенроуза, методы с использованием SVD-разложения и д.р. В некоторых случаях для обеспечения 
+устойчивости решения применяют методы решения некорректно поставленных задач, в частности, метод регуляризации Тихонова. \footnote{Мной были реализрваны эти и многие другие методы в рамках работы над проектами ЯМК (прибор ядерно-магнитного каротажа) и 8АД (прибор акустического кроссдипольного каротажа).}
+
+Для простоты вычислений воспользуемся наиболее простым подходом, также используемым при решении задач методом наименьших квадратов. Домножим обе части уравнения (\ref{eq:9}) на $A^{T}$ - транспонированную матрицу. Получим совместную систему линейных алгебраических уравнений 2-го порядка:
+\begin{equation}
+	A^{T}Ax=A^{T}B, \label{eq:10}
+\end{equation}  
+где 
+$$
+	A^{T}A = 
+	\begin{pmatrix}
+		|\Delta \mathbf{v}|^{2} & -\Delta \mathbf{v} \cdot \Delta \mathbf{u}  \\
+		-\Delta \mathbf{v} \cdot \Delta \mathbf{u} & |\Delta \mathbf{u}|^{2}			
+	\end{pmatrix},
+	A^{T}B = 
+	\begin{pmatrix}
+		\Delta \mathbf{v} \cdot \Delta \mathbf{w}  \\
+		-\Delta \mathbf{u} \cdot \Delta \mathbf{w} 
+	\end{pmatrix},
+$$
+где <<$\cdot$>> обозначает скалярное произведение, $|\cdot|^{2}$ - квадрат модуля вектора.
+
+\section{Реализация классов Vector3D и Segment3D}
+
+\subsection{Vector3D.h}
+\begin{verbatim}
+#include<cmath>
+
+#pragma once
+class Vector3D
+{
+public:
+
+	double X;
+	double Y;
+	double Z;
+
+	Vector3D(double x = 0, double y = 0, double z = 0)
+		: X(x), Y(y), Z(z)
+	{ }
+
+	Vector3D operator+(const Vector3D& other) const;
+	Vector3D operator-(const Vector3D& other) const;
+	Vector3D operator*(double scalar) const;
+	double dot(const Vector3D& other) const;
+	Vector3D cross(const Vector3D& other) const;
+	double length() const;
+	Vector3D normalized() const;
+};
+\end{verbatim}
+
+\subsection{Vector3D.cpp}
+\begin{verbatim}
+#include "Vector3D.h"
+
+Vector3D Vector3D::operator+(const Vector3D& other) const 
+{
+    return Vector3D(X + other.X, Y + other.Y, Z + other.Z);
+}
+
+Vector3D Vector3D::operator-(const Vector3D& other) const
+{
+	return Vector3D(X - other.X, Y - other.Y, Z - other.Z);
+}
+
+Vector3D Vector3D::operator*(double scalar) const
+{
+	return Vector3D(X * scalar, Y * scalar, Z * scalar);
+}
+
+double Vector3D::dot(const Vector3D& other) const
+{
+    return X * other.X + Y * other.Y + Z * other.Z;
+}
+
+Vector3D Vector3D::cross(const Vector3D& other) const 
+{
+	return Vector3D(
+		Y * other.Z - Z * other.Y,
+		Z * other.X - X * other.Z,
+		X * other.Y - Y * other.X
+	);
+}
+
+double Vector3D::length() const {
+	return std::sqrt(X * X + Y * Y + Z * Z);
+}
+
+Vector3D Vector3D::normalized() const {
+	double len = length();
+	if (len < 1e-10) return Vector3D(0, 0, 0);
+	return Vector3D(X / len, Y / len, Z / len);
+}
+\end{verbatim}
+
+
+\subsection{Segment3D.h}
+\begin{verbatim}
+#include "Vector3D.h"
+
+
+#pragma once
+class Segment3D
+{
+public:
+    Vector3D start;
+    Vector3D end;
+
+    Segment3D(const Vector3D& s, const Vector3D& e) : start(s), end(e) {}
+
+    Vector3D direction() const;
+    double length() const;     
+};
+\end{verbatim}
+
+\subsection{Segment3D.cpp}
+\begin{verbatim}
+#include "Segment3D.h"
+
+Vector3D Segment3D::direction() const 
+{
+	return end - start;
+}
+
+double Segment3D::length() const 
+{
+    return direction().length();
+}
+\end{verbatim}
+
+\end{document}
