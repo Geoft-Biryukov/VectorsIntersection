@@ -174,6 +174,34 @@ $$
 $$
 где <<$\cdot$>> обозначает скалярное произведение, $|\cdot|^{2}$ - квадрат модуля вектора.
 
+Решение системы уравнений (\ref{eq:10}) легко найти, напрмер, методом Крамера:
+\begin{equation}
+	t_{1} = \frac{D_{1}}{D}, 	t_{2} = \frac{D_{2}}{D},  \label{eq:11}
+\end{equation}
+где
+\begin{gather*}	
+	D = |\Delta \mathbf{v}|^{2}|\Delta \mathbf{u}|^{2} - \left(\Delta \mathbf{v} \cdot \Delta \mathbf{u}\right)^{2}, \\		
+	D_{1} = |\Delta \mathbf{u}|^{2}\left(\Delta \mathbf{v} \cdot \Delta \mathbf{w}\right) 
+	- \left(\Delta \mathbf{v} \cdot \Delta \mathbf{u}\right)\left(\Delta \mathbf{u} \cdot \Delta \mathbf{w}\right), \\
+	D_{2} = |\Delta \mathbf{v}|^{2}\left(\Delta \mathbf{u} \cdot \Delta \mathbf{w}\right) 
+	- \left(\Delta \mathbf{v} \cdot \Delta \mathbf{u}\right)\left(\Delta \mathbf{v} \cdot \Delta \mathbf{w}\right).	
+\end{gather*}
+
+Найти координаты точки пересечения можно путем подстановки (\ref{eq:11}) в (\ref{eq:2}) или (\ref{eq:3}).
+
+Сделаем несколько замечаний:
+
+\textbf{Замечание 1.} Опредилитель $D = |\Delta \mathbf{v}|^{2}|\Delta \mathbf{u}|^{2} - \left(\Delta \mathbf{v} \cdot \Delta \mathbf{u}\right)^{2}$ будет равен нулю для параллельных векторов $\Delta \mathbf{v} || \Delta \mathbf{u}$. Это следует из определения скалярного произведения: 
+	$\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}||\mathbf{b}|\cos(\mathbf{a}, \mathbf{b})$. Следовательно, при реализации алгоритма нужно организовать проверку на близость к нулю $D$ и обработать эту ситуацию отдельно.  
+
+\textbf{Замечание 2.} Условия $t_{1} \in \left[0; 1\right]$ и $t_{2} \in \left[0; 1\right]$ могут не выполниться: точка пересечения лежит не внутри заданных отрезков. Также эту ситуацию следует обаботать отдельно.
+
+\textbf{Замечание 3.} При программной реализации алгоритма следует организовать проверку выполнения равества (\ref{eq:4}):
+$$
+	|\mathbf{p}\left(t_{1}\right) - \mathbf{q}\left(t_{2}\right)| < \epsilon,
+$$
+если такое неравенство не выполняет отрезки не пересекаются.
+
 \section{Реализация классов Vector3D и Segment3D}
 
 \subsection{Vector3D.h}
