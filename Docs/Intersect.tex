@@ -278,7 +278,7 @@ Vector3D Vector3D::normalized() const {
 \subsection{Segment3D.h}
 \begin{verbatim}
 #include "Vector3D.h"
-
+#include <stdexcept>
 
 #pragma once
 class Segment3D
@@ -291,21 +291,62 @@ public:
 
     Vector3D direction() const;
     double length() const;     
+    static Vector3D Intersect(const Segment3D& seg1, const Segment3D& seg2);
 };
 \end{verbatim}
 
 \subsection{Segment3D.cpp}
 \begin{verbatim}
-#include "Segment3D.h"
-
-Vector3D Segment3D::direction() const 
+// Функция для нахождения точки пересечения двух отрезков
+Vector3D Segment3D::Intersect(const Segment3D& v, const Segment3D& u) 
 {
-	return end - start;
-}
+	Vector3D delta_v = v.direction();
+	Vector3D delta_u = u.direction();
+	Vector3D w = u.start - v.start;
 
-double Segment3D::length() const 
-{
-    return direction().length();
+	double u2 = delta_u.dot(delta_u);
+	double v2 = delta_v.dot(delta_v);
+
+	double uv = delta_u.dot(delta_v);
+	double uw = delta_u.dot(w);
+	double vw = delta_v.dot(w);
+
+	double D = u2 * v2 - uv * uv;
+
+	double t1, t2;
+
+	// Вычисляем параметры для ближайших точек на прямых
+	if (D < 1e-10) {          // отрезки почти параллельны
+		t1 = 0;
+		t2 = (uv > v2 ? uw / uv : vw / v2);
+	}
+	else {
+		t1 = (u2 * vw - uv * uw) / D;
+		t2 = (uv * vw - v2 * uw) / D;
+	}
+
+	// Ограничиваем параметры в пределах отрезков
+	if (t1 < 0) t1 = 0;
+	if (t1 > 1) t1 = 1;
+	if (t2 < 0) t2 = 0;
+	if (t2 > 1) t2 = 1;
+
+	// Вычисляем точки на отрезках
+	Vector3D point1 = v.start + delta_v * t1;
+	Vector3D point2 = u.start + delta_u * t2;
+
+	// Проверяем, совпадают ли точки (пересекаются ли отрезки)
+	Vector3D diff = point1 - point2;
+	if (diff.length() < 1e-10) {
+		return point1;  // отрезки пересекаются
+	}
+	else {
+		// Выбрасывать исключение не самый лучший вариант 
+		// (обработка исключений ресурсоёмкий процесс),
+		// можно, например, возвращать вектор с компонентами NaN 
+		// или ещё как-то сообщать, что точка пересечения не найдена
+		throw std::runtime_error("Отрезки не пересекаются");
+	}
 }
 \end{verbatim}
 

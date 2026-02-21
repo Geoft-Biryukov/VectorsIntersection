@@ -11,11 +11,11 @@ double Segment3D::length() const
 }
 
 // Функция для нахождения точки пересечения двух отрезков
-Vector3D Segment3D::Intersect(const Segment3D& seg1, const Segment3D& seg2) 
+Vector3D Segment3D::Intersect(const Segment3D& v, const Segment3D& u) 
 {
-	Vector3D delta_u = seg1.direction();
-	Vector3D delta_v = seg2.direction();
-	Vector3D w = seg1.start - seg2.start;
+	Vector3D delta_v = v.direction();
+	Vector3D delta_u = u.direction();
+	Vector3D w = u.start - v.start;
 
 	double u2 = delta_u.dot(delta_u);
 	double v2 = delta_v.dot(delta_v);
@@ -45,8 +45,8 @@ Vector3D Segment3D::Intersect(const Segment3D& seg1, const Segment3D& seg2)
 	if (t2 > 1) t2 = 1;
 
 	// Вычисляем точки на отрезках
-	Vector3D point1 = seg1.start + delta_v * t1;
-	Vector3D point2 = seg2.start + delta_u * t2;
+	Vector3D point1 = v.start + delta_v * t1;
+	Vector3D point2 = u.start + delta_u * t2;
 
 	// Проверяем, совпадают ли точки (пересекаются ли отрезки)
 	Vector3D diff = point1 - point2;
@@ -54,6 +54,10 @@ Vector3D Segment3D::Intersect(const Segment3D& seg1, const Segment3D& seg2)
 		return point1;  // отрезки пересекаются
 	}
 	else {
+		// Выбрасывать исключение не самый лучший вариант 
+		// (обработка исключений ресурсоёмкий процесс),
+		// можно, например, возвращать вектор с компонентами NaN 
+		// или ещё как-то сообщать, что точка пересечения не найдена
 		throw std::runtime_error("Отрезки не пересекаются");
 	}
 }
