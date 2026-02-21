@@ -1,5 +1,5 @@
 ﻿#include "Vector3D.h"
-
+#include <stdexcept>
 
 #pragma once
 class Segment3D
@@ -12,5 +12,6 @@ public:
 
     Vector3D direction() const;
     double length() const;     
+    static Vector3D Intersect(const Segment3D& seg1, const Segment3D& seg2);
 };
 
